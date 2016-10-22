@@ -1,11 +1,11 @@
 package cpc.match.api;
 
-import cpc.match.api.Trie;
 import org.junit.jupiter.api.Test;
 
 import static cpc.match.api.Matcher.*;
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RangeTest {

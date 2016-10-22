@@ -1,11 +1,10 @@
 package cpc.match.api;
 
-import cpc.match.api.Trie;
-import static cpc.match.api.Matcher.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static cpc.match.api.Matcher.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
