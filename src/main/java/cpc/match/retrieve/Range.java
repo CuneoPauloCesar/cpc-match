@@ -10,9 +10,9 @@ import java.util.function.Consumer;
 
 
 public class Range<V> implements Trie<V> {
-    public final List<KeyVal<Trie<V>>> ranges;
+    public final List<KeyVal<Comparable, Trie<V>>> ranges;
 
-    public Range(List<KeyVal<Trie<V>>> ranges) {
+    public Range(List<KeyVal<Comparable, Trie<V>>> ranges) {
         this.ranges = ranges;
     }
 
@@ -34,7 +34,7 @@ public class Range<V> implements Trie<V> {
             return;
         }
 
-        final KeyVal<Trie<V>> top = ranges.get(pos);
+        final KeyVal<Comparable, Trie<V>> top = ranges.get(pos);
         if (top.key.compareTo(comparableKey) == 0) {
             // Because ranges are meant to be strict dis-equality
             return;
@@ -47,7 +47,7 @@ public class Range<V> implements Trie<V> {
 
     private int insertionPos(Comparable comparableKey) {
         int pos = Collections.binarySearch(ranges,
-                new KeyVal(comparableKey, null)
+                new KeyVal<>(comparableKey, null)
                 , (c1, c2) -> c1.key.compareTo(c2.key));
         if (pos < 0) {
             pos = -(pos + 1);

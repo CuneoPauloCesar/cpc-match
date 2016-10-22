@@ -17,9 +17,9 @@ import static java.util.Arrays.asList;
 public class Range<V>
 
         implements Trie.Builder<V> {
-    public List<KeyVal<Trie.Builder<V>>> ranges;
+    public List<KeyVal<Comparable, Trie.Builder<V>>> ranges;
 
-    public Range(List<KeyVal<Trie.Builder<V>>> ranges) {
+    public Range(List<KeyVal<Comparable, Trie.Builder<V>>> ranges) {
         this.ranges = ranges;
     }
 
@@ -46,17 +46,17 @@ public class Range<V>
         return new Range<>(copyRanges());
     }
 
-    private List<KeyVal<Trie.Builder<V>>> copyRanges() {
-        final List<KeyVal<Trie.Builder<V>>> result = new ArrayList<>();
-        for (KeyVal<Trie.Builder<V>> keyVal : ranges) {
+    private List<KeyVal<Comparable, Trie.Builder<V>>> copyRanges() {
+        final List<KeyVal<Comparable, Trie.Builder<V>>> result = new ArrayList<>();
+        for (KeyVal<Comparable, Trie.Builder<V>> keyVal : ranges) {
             result.add(new KeyVal<>(keyVal.key, keyVal.val.copy()));
         }
         return result;
     }
 
-    private List<KeyVal<Trie<V>>> compressRanges() {
-        final List<KeyVal<Trie<V>>> result = new ArrayList<>();
-        for (KeyVal<Trie.Builder<V>> keyVal : ranges) {
+    private List<KeyVal<Comparable, Trie<V>>> compressRanges() {
+        final List<KeyVal<Comparable, Trie<V>>> result = new ArrayList<>();
+        for (KeyVal<Comparable, Trie.Builder<V>> keyVal : ranges) {
             result.add(new KeyVal<>(keyVal.key, keyVal.val.build()));
         }
         return result;
@@ -64,15 +64,15 @@ public class Range<V>
 
 
     private void insertRange(cpc.match.builder.matchers.Range range, V value, Path.BuildPath<Matcher> keys) {
-        final List<KeyVal<Trie.Builder<V>>> result = new ArrayList<>();
-        final List<KeyVal<Trie.Builder<V>>> lefts = this.ranges;
-        final List<KeyVal<V>> rights = asList(new KeyVal<>(range.from, null)
+        final List<KeyVal<Comparable, Trie.Builder<V>>> result = new ArrayList<>();
+        final List<KeyVal<Comparable, Trie.Builder<V>>> lefts = this.ranges;
+        final List<KeyVal<Comparable, V>> rights = asList(new KeyVal<>(range.from, null)
                 , new KeyVal<>(range.to, value));
         int i = 0;
         int j = 0;
         for (; i < lefts.size() && j < rights.size(); ) {
-            final KeyVal<Trie.Builder<V>> left = lefts.get(i);
-            final KeyVal<V> right = rights.get(j);
+            final KeyVal<Comparable, Trie.Builder<V>> left = lefts.get(i);
+            final KeyVal<Comparable, V> right = rights.get(j);
             final Trie.Builder<V> vSubTrie = mergeSubtries(keys, left, right);
             final int leftCompareToRight = compare(left, right);
             if (leftCompareToRight == 0) {
@@ -88,11 +88,11 @@ public class Range<V>
             }
         }
         for (; i < lefts.size(); ++i) {
-            final KeyVal<Trie.Builder<V>> left = lefts.get(i);
+            final KeyVal<Comparable, Trie.Builder<V>> left = lefts.get(i);
             result.add(left);
         }
         for (; j < rights.size(); ++j) {
-            final KeyVal<V> right = rights.get(j);
+            final KeyVal<Comparable, V> right = rights.get(j);
             final Trie.Builder<V> vSubTrie = keys.builder();
             if (right.val != null) {
                 vSubTrie.insert(keys, right.val);
@@ -102,7 +102,7 @@ public class Range<V>
         this.ranges = result;
     }
 
-    private int compare(KeyVal<Trie.Builder<V>> left, KeyVal<V> right) {
+    private int compare(KeyVal<Comparable, Trie.Builder<V>> left, KeyVal<Comparable, V> right) {
         if (right.key == cpc.match.builder.matchers.Range.INF_NEG
                 || right.key == cpc.match.builder.matchers.Range.INF_POS) {
             return -right.key.compareTo(left.key);
@@ -110,7 +110,7 @@ public class Range<V>
         return left.key.compareTo(right.key);
     }
 
-    private Trie.Builder<V> mergeSubtries(Path.BuildPath<Matcher> keys, KeyVal<Trie.Builder<V>> left, KeyVal<V> right) {
+    private Trie.Builder<V> mergeSubtries(Path.BuildPath<Matcher> keys, KeyVal<Comparable, Trie.Builder<V>> left, KeyVal<Comparable, V> right) {
         final Trie.Builder<V> vSubTrie;
         if (right.val == null) {
             vSubTrie = left.val.copy();

@@ -1,10 +1,10 @@
 package cpc.match.common;
 
-public final class KeyVal<V> {
-    public final Comparable key;
+public final class KeyVal<K, V> {
+    public final K key;
     public final V val;
 
-    public KeyVal(Comparable key, V val) {
+    public KeyVal(K key, V val) {
         this.key = key;
         this.val = val;
     }
@@ -13,4 +13,5 @@ public final class KeyVal<V> {
     public String toString() {
         return "[" + key + ", " + val + "]";
     }
+
 }
