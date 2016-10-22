@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 * Product table example taken from:
 * http://toomuchcoding.com/blog/2013/02/03/drools-decision-tables-with-camel-and/
 */
-public class UseCase {
+public class UseCaseTest {
     public static final String NO_DISCOUNT = "Sorry, no discount will be granted.";
     public static final String GRANTED_A_DISCOUNT = "Congratulations, you are granted a discount";
     public static final String AMERICAN_PRODUCTS_GRANTED_A_30_DISCOUNT = "Thank you for buying the american products - you will be granted a 30 discount.";
