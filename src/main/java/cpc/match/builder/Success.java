@@ -16,7 +16,7 @@ public class Success<V> implements Trie.Builder<V> {
     }
 
     @Override
-    public void insert(Path<Matcher> path, V value) {
+    public void insert(Path.BuildPath<Matcher> path, V value) {
         values.add(value);
     }
 

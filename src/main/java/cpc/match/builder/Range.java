@@ -24,9 +24,9 @@ public class Range<V>
     }
 
     @Override
-    public void insert(Path<Matcher> path, V value) {
+    public void insert(Path.BuildPath<Matcher> path, V value) {
         final Matcher first = path.first();
-        final Path<Matcher> rest = path.rest();
+        final Path.BuildPath<Matcher> rest = path.rest();
         if (first instanceof cpc.match.builder.matchers.Range) {
             final cpc.match.builder.matchers.Range range = (cpc.match.builder.matchers.Range) first;
             insertRange(range, value, rest);
@@ -63,7 +63,7 @@ public class Range<V>
     }
 
 
-    private void insertRange(cpc.match.builder.matchers.Range range, V value, Path<Matcher> keys) {
+    private void insertRange(cpc.match.builder.matchers.Range range, V value, Path.BuildPath<Matcher> keys) {
         final List<KeyVal<Trie.Builder<V>>> result = new ArrayList<>();
         final List<KeyVal<Trie.Builder<V>>> lefts = this.ranges;
         final List<KeyVal<V>> rights = asList(new KeyVal<>(range.from, null)
@@ -93,8 +93,7 @@ public class Range<V>
         }
         for (; j < rights.size(); ++j) {
             final KeyVal<V> right = rights.get(j);
-            final Trie.Builder<V> vSubTrie;
-            vSubTrie = (Trie.Builder<V>) ((Path) keys).builder();
+            final Trie.Builder<V> vSubTrie = keys.builder();
             if (right.val != null) {
                 vSubTrie.insert(keys, right.val);
             }
@@ -111,7 +110,7 @@ public class Range<V>
         return left.key.compareTo(right.key);
     }
 
-    private Trie.Builder<V> mergeSubtries(Path<Matcher> keys, KeyVal<Trie.Builder<V>> left, KeyVal<V> right) {
+    private Trie.Builder<V> mergeSubtries(Path.BuildPath<Matcher> keys, KeyVal<Trie.Builder<V>> left, KeyVal<V> right) {
         final Trie.Builder<V> vSubTrie;
         if (right.val == null) {
             vSubTrie = left.val.copy();

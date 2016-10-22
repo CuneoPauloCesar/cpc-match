@@ -1,8 +1,10 @@
 package cpc.match.api;
 
+import cpc.match.api.Path.BuildPath;
 import cpc.match.builder.Exact;
 import cpc.match.builder.Range;
 import cpc.match.builder.RangeOrExact;
+import cpc.match.common.ListPath;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +27,8 @@ public interface Trie<V> {
         return result;
     }
 
+
+
     /**
      * For the given trie, traverse the trie using the @path
      * and send to @link Collector.accept the matching results
@@ -39,7 +43,7 @@ public interface Trie<V> {
 
     /**
      * Used internally.
-     * Many be remove form here.
+     * May be remove form here.
      */
     Trie EMPTY = (keys, result) -> {
     };
@@ -47,11 +51,10 @@ public interface Trie<V> {
     interface Builder<V> {
         /**
          * For the given @param path describing a path, insert the value in that path.
-         *
-         * @param path  path descriptors
+         *  @param path  path descriptors
          * @param value value to be retrieve by path.
          */
-        void insert(Path<Matcher> path, V value);
+        void insert(BuildPath<Matcher> path, V value);
 
         /**
          * Convinience method. Will convert no mather args into Matcher.eq.
@@ -68,9 +71,15 @@ public interface Trie<V> {
                     ms.add(Matcher.eq(o));
                 }
             }
-            insert(Path.cons(ms), value);
+            insert(cons(ms), value);
         }
 
+        default <T> BuildPath<T> cons(java.util.List<T> items) {
+            if (items == null || items.isEmpty()) {
+                return Path.EMPTY;
+            }
+            return new ListPath<>(0, items);
+        }
         /**
          * @return a copy of the given builder.
          */
@@ -81,6 +90,7 @@ public interface Trie<V> {
          */
         Trie<V> build();
     }
+
 
 
     static <V> Trie.Builder<V> builder() {

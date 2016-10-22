@@ -1,5 +1,6 @@
 package cpc.match.builder;
 
+import cpc.match.api.Path.BuildPath;
 import cpc.match.api.Trie;
 import cpc.match.builder.matchers.Nor;
 import cpc.match.builder.matchers.Or;
@@ -21,9 +22,9 @@ public class Exact<V>
     }
 
     @Override
-    public void insert(Path<Matcher> path, V value) {
+    public void insert(BuildPath<Matcher> path, V value) {
         final Matcher first = path.first();
-        final Path<Matcher> rest = path.rest();
+        final BuildPath<Matcher> rest = path.rest();
         if (Matcher.ANY.equals(first)) {
             insertFirst(value, Matcher.ANY, rest);
         } else if (first instanceof Or) {
@@ -33,19 +34,19 @@ public class Exact<V>
         }
     }
 
-    private void insertFirst(V value, Matcher first, Path<Matcher> rest) {
+    private void insertFirst(V value, Matcher first, BuildPath<Matcher> rest) {
         final Trie.Builder<V> subTrie = getSubTrie(first, rest);
         subTrie.insert(rest, value);
     }
 
-    private void insertIn(V value, Or first, Path<Matcher> rest) {
+    private void insertIn(V value, Or first, BuildPath<Matcher> rest) {
         for (Object key : first.a) {
             final Trie.Builder<V> subTrie = getSubTrie(key, rest);
             subTrie.insert(rest, value);
         }
     }
 
-    private void insertNotIn(V value, Nor first, Path<Matcher> rest) {
+    private void insertNotIn(V value, Nor first, BuildPath<Matcher> rest) {
         final Trie.Builder<V> notTrie = getSubTrie(Nor.NOT, rest);
         for (Object key : first.a) {
             if (!branches.containsKey(key)) {
@@ -60,10 +61,10 @@ public class Exact<V>
         }
     }
 
-    private Trie.Builder<V> getSubTrie(Object key, Path<Matcher> keys) {
+    private Trie.Builder<V> getSubTrie(Object key, BuildPath<Matcher> keys) {
         Trie.Builder<V> subTrie = branches.get(key);
         if (subTrie == null) {
-            subTrie = (Trie.Builder<V>) ((Path) keys).builder();
+            subTrie = keys.builder();
             branches.put(key, subTrie);
         }
         return subTrie;

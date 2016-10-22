@@ -20,7 +20,7 @@ public class RangeOrExact<V>
     }
 
     @Override
-    public void insert(Path<Matcher> path, V value) {
+    public void insert(Path.BuildPath<Matcher> path, V value) {
         branches.insert(path, value);
         ranges.insert(path, value);
     }
